@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noughts&amp;Crosses</title>
+
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="style-old.css" media="all"/>
+
+    <script src="../js/model.js" type="text/javascript"></script>
+    <script src="../js/view-model.js" type="text/javascript"></script>
+</head>
+
+<body>
+<header class="full_width wrapper">
+    <div class="container centered transformer">
+        <div class="game_title">
+            <h2>Tic-Tac-Toe</h2>
+        </div>
+        <div id="start_game">
+            <button type="button" title="Start game" onclick="startGame()">
+                <span class="fa fa-play"></span>
+                <span class="fa fa-refresh orange collapsed"></span>
+            </button>
+        </div>
+        <div id="settings_btn">
+            <button type="button" title="Settings" onclick="settingsShow()">
+                <span class="fa fa-cog blue"></span></button>
+        </div>
+    </div>
+</header>
+
+<section class="full_width wrapper" id="settings_container">
+    <div class="container centered transformer">
+        <div class="field_settings_group">
+            <div class="field_settings rows">
+                <button type="button" title="Increase rows" class="inc button" onclick="increaseRows()">
+                    <span class="fa fa-caret-up"></span>
+                </button>
+                <div class="cell_count">
+                    <label for="rowsInput">Rows</label>
+                    <input type="text" class="settings-control" id="rowsInput" value="" readonly>
+                </div>
+                <button type="button" title="Decrease rows" class="dec button" onclick="decreaseRows()">
+                    <span class="fa fa-caret-down"></span>
+                </button>
+            </div>
+
+            <div class="field_settings columns">
+                <button type="button" title="Increase columns" class="inc button" onclick="increaseColumns()">
+                    <span class="fa fa-caret-up"></span>
+                </button>
+                <div class="cell_count">
+                    <label for="columnsInput">Columns</label>
+                    <input type="text" class="settings-control" id="columnsInput" value="" readonly>
+                </div>
+                <button type="button" title="Decrease columns" class="dec button" onclick="decreaseColumns()">
+                    <span class="fa fa-caret-down"></span>
+                </button>
+            </div>
+            <div class="field_settings winLength">
+                <button type="button" title="Increase win length" class="inc button" onclick="increaseWinLength()">
+                    <span class="fa fa-caret-up"></span>
+                </button>
+                <div class="cell_count">
+                    <label for="winLengthInput">Win&nbsp;length</label>
+                    <input type="text" class="settings-control" id="winLengthInput" value="" readonly>
+                </div>
+                <button type="button" title="Decrease win length" class="dec button" onclick="decreaseWinLength()">
+                    <span class="fa fa-caret-down"></span>
+                </button>
+            </div>
+        </div><!--end .field_settings_group-->
+
+        <div class="" id="player_settings">
+            <template id="player_instance_template">
+                <form class="player_instance">
+                    <div class="player_name">
+                        <input title="Player name" type="text" class="settings-control" value=""
+                               onchange="updatePlayer(this, 'name')">
+                    </div>
+                    <div class="settings_buttons">
+                        <div class="symbol_btn">
+                            <div class="dropdown">
+                                <button type="button" title="Change player symbol" class="dropdown-toggle symbol_selected">
+                                    <span class="active_symbol"></span>
+                                </button>
+                                <ul class="dropdown-menu player_symbol"
+                                    onclick="updatePlayer(this, 'symbol')"></ul>
+                            </div>
+                        </div>
+                        <div class="type_btn">
+                            <div class="dropdown">
+                                <button type="button" title="Change player type" class="dropdown-toggle type_selected">
+                                    <span class="active_type"></span>
+                                </button>
+                                <ul class="dropdown-menu player_type"
+                                    onclick="updatePlayer(this, 'type')"></ul>
+                            </div>
+                        </div>
+                        <div class="remove_btn">
+                            <button type="button" title="Delete player" class="btn remove_player"
+                                    onclick="removePlayer(this)">
+                                <span class="fa fa-minus"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </template>
+            <div id="player_instances_collection"></div>
+            <button type="button" title="Add player" class="btn add_player" onclick="addPlayer()">
+                <span class="fa fa-plus"></span>
+            </button>
+        </div><!--end #player_settings-->
+    </div><!--end .transformer-->
+</section><!--end #settings_container-->
+
+<section class="full_width" id="game_field_container">
+    <div class="container centered">
+        <div id="play_field" class="wrapper">
+            <div id="play_field_body" class="transformer"></div>
+        </div>
+    </div>
+</section><!--end #game_field_container-->
+
+<footer class="full_width wrapper">
+    <div class="container centered transformer">
+        <div class="status">
+            <span id="gameStatus" class="collapsed"></span>
+            <span id="defaultStatus" class="">Game status</span>
+        </div>
+    </div>
+</footer>
+
+<script src="../js/view.js" type="text/javascript"></script>
+
+</body>
+</html>

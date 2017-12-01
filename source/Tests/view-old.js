@@ -16,12 +16,12 @@ let playerInstancesCollection = document.querySelector('#player_instances_collec
 let template = document.querySelector('#player_instance_template');
 let settingsContainer = document.querySelector('#settings_container');
 let gameFieldContainer = document.querySelector('#game_field_container');
-let gameStatus = document.querySelector('#gameStatus');
-let defaultStatus = document.querySelector('#defaultStatus');
-let refreshBtn = document.querySelector('.fa-refresh');
-let playBtn = document.querySelector('.fa-play');
-let settingsBtn = document.querySelector('.fa-cog');
+let refreshBtn = document.querySelector('.glyphicon-refresh');
+let playBtn = document.querySelector('.glyphicon-play');
+let settingsBtn = document.querySelector('.glyphicon-cog');
 let gameTitle = document.querySelector('.game_title');
+let elWidth = playFieldBody.offsetWidth;
+let elHeight = playFieldBody.offsetHeight;
 
 let symbolsImageArray = {
     'X': 'cross_green',
@@ -47,7 +47,25 @@ let playerTypesImageArray = {
     'computer': 'computer'
 };
 
+// (function resize() {
+// let elWidth = playFieldBody.offsetWidth;
+// let elHeight = playFieldBody.offsetHeight;
+
+// function doResize() {
+//     let scale = Math.min(
+//         playField.offsetWidth / elWidth,
+//         playField.offsetHeight / elHeight
+//     );
+//     console.log('width: ' + playField.offsetWidth, elWidth);
+//     console.log('height: ' + playField.offsetHeight, elHeight);
+//     console.log(scale);
+//     playFieldBody.style.transform = "scale(" + scale + ")";
+// }
+
+// })();
+
 window.addEventListener("resize", doResize);
+// window.addEventListener("load", doResize);
 
 function getAvailableSymbolsList() {
     return viewModel.getAvailableSymbolsList();
@@ -55,25 +73,24 @@ function getAvailableSymbolsList() {
 
 /************ Starting game ************/
 window.onload = function() {
-    doResize();
     rowsInput.value = viewModel.getRows();
     columnsInput.value = viewModel.getColumns();
     winLengthInput.value = viewModel.getWinLength();
+    doResize();
     let playersList = viewModel.getPlayersCollection();
     for (let i = 0; i < playersList.length; i++) {
         addPlayerInstance(playersList[i]);
     }
     updateSymbolsList();
-    addCollapsedClass();
-    dropdownToggle();
+    addToggleClass();
 };
 
 function addPlayerInstance(player) {
     playerInstancesCollection.appendChild(template.content.cloneNode(true));
 
-    let playerInstancesList = document.querySelectorAll('.player_instance');
+    let playerInstancesList = document.getElementsByClassName('player_instance');
     let playerInstance = playerInstancesList[playerInstancesList.length - 1];
-    let nameField = playerInstance.querySelector('.player_name input');
+    let nameField = playerInstance.querySelector('.form-group .player_name');
     let typeUlContainer = playerInstance.querySelector('.dropdown-menu.player_type');
     let symbolLi = document.createElement('li');
     let symbolImg = document.createElement('img');
@@ -111,7 +128,6 @@ function updateSymbolsList() {
                 activeSymbol[k].appendChild(symbolImg.cloneNode(true));
                 playerSymbolUList[k].querySelector('li').removeAttribute('class');
                 this.closest('li').setAttribute('class', 'active');
-                playerSymbolUList[k].classList.remove('show');
             });
             playerSymbolUList[k].appendChild(symbolLi);
         }
@@ -136,11 +152,11 @@ function createTypeList(playerType, container) {
             }
 
             typeImg.addEventListener('click', function() {
+                typeLi.removeAttribute('class');
                 activeType.innerHTML = '';
                 activeType.appendChild(typeImg.cloneNode(true));
                 container.querySelector('li.active').removeAttribute('class');
                 this.closest('li').setAttribute('class', 'active');
-                container.classList.remove('show');
             });
             container.appendChild(typeLi);
         }
@@ -160,8 +176,9 @@ function startGame() {
     doResize();
 }
 
-function addCollapsedClass() {
+function addToggleClass() {
     gameFieldContainer.classList.add('collapsed');
+    // refreshBtn.classList.add('collapsed');
 }
 
 function settingsShow() {
@@ -174,9 +191,6 @@ function settingsShow() {
         playBtn.classList.toggle('collapsed');
         settingsBtn.classList.toggle('white');
         gameTitle.classList.toggle('orange');
-        gameStatus.classList.toggle('collapsed');
-        defaultStatus.classList.toggle('collapsed');
-        doResize();
     }
 }
 
@@ -190,14 +204,18 @@ function gameFieldShow() {
         playBtn.classList.toggle('collapsed');
         settingsBtn.classList.toggle('white');
         gameTitle.classList.toggle('orange');
-        gameStatus.classList.toggle('collapsed');
-        defaultStatus.classList.toggle('collapsed');
     }
 }
 
 function createPlayFieldDiv(rows, columns) {
     playFieldBody.innerHTML = '';
+
+
+    // let fieldBody = playField.appendChild(document.createElement('div'));
+    // fieldBody.setAttribute('class', 'field_body');
+
     let flexColumn = playFieldBody.appendChild(document.createElement('div'));
+    // flexColumn.setAttribute('id', 'play_field_body');
     flexColumn.setAttribute('class', 'flex_column');
 
     for (let r = 0; r < rows; r++) {
@@ -216,8 +234,37 @@ function createPlayFieldDiv(rows, columns) {
         }
     }
 
-    playFieldBody.style.width = 100 * columns + 'rem';
-    playFieldBody.style.height = 100 * rows + 'rem';
+
+    playFieldBody.style.width = 100 * columns + 'em';
+    playFieldBody.style.height = 100 * rows + 'em';
+
+
+    // let el = document.querySelector('#play_field_body');
+    // let cellArray = document.querySelectorAll('.field_cell');
+    // let elHeight = window.getComputedStyle(el).getPropertyValue('height');
+    // let elWidth = window.getComputedStyle(el).getPropertyValue('width');
+    // let cellWidth, h, w;
+    // h = parseInt(elHeight) / rows;
+    // w = (parseInt(elWidth) / columns);
+    // cellWidth = (h - w) > 0 ? w : h;
+    // if (cellWidth > 150) cellWidth = 150;
+    // cellArray.forEach(function(item, i, cellArray) {
+    //     cellArray[i].style.width = cellWidth + 'px';
+    //     cellArray[i].style.paddingBottom = cellWidth + 'px';
+    // });
+
+
+    /*
+    if ((columns > 3) && (columns <= 5 )) {
+        document.querySelector('.game_field').style.fontSize = '8px';
+    }
+    else if ((columns > 5) && (columns <= 7)) {
+        document.querySelector('.game_field').style.fontSize = '6px';
+    }
+    else if (columns > 7) {
+        document.querySelector('.game_field').style.fontSize = '4px';
+    }
+    */
 }
 
 
@@ -259,7 +306,8 @@ function updateFieldCellsContent() {
 }
 
 function changeCurrentStatus() {
-    let playerNamesArr = document.querySelectorAll('.player_name input');
+    let playerNamesArr = document.querySelectorAll('.form-group .player_name');
+    let statusDiv = document.querySelector('#gameStatus');
     let status = viewModel.getCurrentStatus();
     let move = 'Turn ' + viewModel.getCurrentMove();
     let name = viewModel.getPlayerName();
@@ -280,7 +328,7 @@ function changeCurrentStatus() {
     else if (status === 'Winner') {
         statusLine = [status, symbol, name, ' on ', move];
     }
-    gameStatus.innerHTML = statusLine.join(' ');
+    statusDiv.innerHTML = statusLine.join(' ');
 }
 
 (function templatePolyfill(d) {
@@ -363,7 +411,7 @@ function updatePlayer(element, prop) {
     let newVal = viewModel.updatePlayer(playerInstance.id, prop, elementVal);
 
     if (prop === 'name') {
-        playerInstance.querySelector('.player_name').value = newVal;
+        playerInstance.querySelector('.form-group .player_name').value = newVal;
     }
     if (prop === 'symbol') {
         updateSymbolsList();
@@ -379,7 +427,6 @@ function addPlayer() {
         let newPlayer = list[list.length - 1];
         addPlayerInstance(newPlayer);
         updateSymbolsList();
-        dropdownToggle();
     }
 }
 
@@ -394,50 +441,14 @@ function removePlayer(element) {
 }
 
 function doResize() {
-    let wrapper = document.querySelectorAll('.wrapper');
-    let transformer = document.querySelectorAll('.transformer');
-    let transformerWidth;
-    let transformerHeight;
-    let elSetCont = document.querySelector('#settings_container');
-
-    document.querySelector('header .container').style.paddingRight = elSetCont.offsetWidth - elSetCont.clientWidth + 'px';
-
-    for(let i = 0; i < wrapper.length; i++){
-        transformerWidth = transformer[i].offsetWidth;
-        transformerHeight = transformer[i].offsetHeight;
-        let scale = Math.min(
-            wrapper[i].offsetWidth / transformerWidth,
-            wrapper[i].offsetHeight / transformerHeight
-        );
-        transformer[i].style.transform = "scale(" + scale + ")";
-
-        let plField = document.querySelector('#play_field_body.transformer');
-        if (transformer[i] === plField) {
-            playFieldBody.style.left = (playField.offsetWidth - (plField.offsetWidth * scale)) / 2 + 'px';
-            playFieldBody.style.top = (playField.offsetHeight - (plField.offsetHeight * scale)) / 2 + 'px';
-        }
-    }
+    elWidth = playFieldBody.offsetWidth;
+    elHeight = playFieldBody.offsetHeight;
+    let scale = Math.min(
+        playField.offsetWidth / elWidth,
+        playField.offsetHeight / elHeight
+    );
+    console.log('width: ' + playField.offsetWidth, elWidth);
+    console.log('height: ' + playField.offsetHeight, elHeight);
+    console.log(scale);
+    playFieldBody.style.transform = "scale(" + scale + ")";
 }
-
-function dropdownToggle() {
-    let dropBtnList = document.querySelectorAll('.dropdown-toggle');
-    for (let i = 0; i < dropBtnList.length; i++) {
-        dropBtnList[i].addEventListener('click', function() {
-            for (let k = 0; k < dropBtnList.length; k++) {
-                dropBtnList[k].parentElement.querySelector('.dropdown-menu').classList.remove('show');
-            }
-            this.parentElement.querySelector('.dropdown-menu').classList.toggle('show');
-        });
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropdown button') && !event.target.matches('.dropdown img')) {
-                let dropdowns = document.querySelectorAll('.dropdown-menu');
-                for (let i = 0; i < dropdowns.length; i++) {
-                    if (dropdowns[i].classList.contains('show')) {
-                        dropdowns[i].classList.remove('show');
-                    }
-                }
-            }
-        }
-    }
-}
-

@@ -15,7 +15,7 @@ let gameDataManagerSingleton = (function() {
     function GameDataManager() {
         let playerId = 2;
         let _symbolCollection = [
-            'X', 'O', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'
+            'X', 'O', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'
         ];
 
         let _playersCollection = [
@@ -377,9 +377,10 @@ function Iterator(array) {
     };
 }
 
-function State(status, player, field) {
+function State(status, player, move, field) {
     this.currentStatus = status;
     this.currentPlayerName = player;
+    this.currentMove = move;
     this.fieldCells = field;
 }
 
@@ -390,6 +391,7 @@ function Game() {
     let _field = fieldSingleton.getInstance();
     let _winnerChecker = new WinnerChecker();
     let _iterator = new Iterator(getPlayersArray());
+    let movesCounter = 1;
 
     _field.refreshFieldCells();
 
@@ -408,6 +410,7 @@ function Game() {
             } else {
                 _iterator.moveNext();
                 _self.startTurn();
+                movesCounter++;
             }
             _self.state = getFreshState();
         }
@@ -425,6 +428,6 @@ function Game() {
 
     function getFreshState() {
         let currentPlayerName = _iterator.getCurrent().playerName;
-        return new State(_currentStatus, currentPlayerName, _field.getFieldCells());
+        return new State(_currentStatus, currentPlayerName, movesCounter, _field.getFieldCells());
     }
 }
